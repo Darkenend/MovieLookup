@@ -1,0 +1,7 @@
+{
+  "name": "MovieLookup",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
