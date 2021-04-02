@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
-  private IMAGE_PREFIX = 'https://www.themoviedb.org/t/p/original';
 
   constructor() { }
 

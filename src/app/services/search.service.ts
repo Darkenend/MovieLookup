@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from "../../environments/environment";
+import { Observable, throwError } from "rxjs";
+import { catchError, retry } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
-  private IMAGE_PREFIX = 'https://www.themoviedb.org/t/p/original';
   private SEARCH_PREFIX = 'https://api.themoviedb.org/3/search/movie?';
 
-  constructor() { }
+  constructor(public http: HttpClient) { }
 
-  public craftQuery(qApi_key: string, qString: string, qlanguage = 'en-US', qPage = 1, qInclude_adult = false, qRegion?: string, qYear?: number, qPrimary_release_year?: number) {
+  public craftQuery(qString: string, qLanguage = 'en-US', qPage = 1, qInclude_adult = false, qRegion?: string, qYear?: number, qPrimary_release_year?: number) {
     let queryInfo: QueryString= {
-      api_key: qApi_key,
+      api_key: environment.api_key,
+      language: qLanguage,
       query: encodeURI(qString),
       page: qPage,
       include_adult: qInclude_adult,
@@ -23,6 +26,17 @@ export class SearchService {
     // Clean up object
     Object.keys(queryInfo).forEach(key => queryInfo[key] === undefined ? delete queryInfo[key] : {});
     console.log(queryInfo);
+    let fullQueryString = this.SEARCH_PREFIX;
+    // Add elements to querystring
+    Object.entries(queryInfo).forEach(
+      ([key, value]) => fullQueryString += key+'='+value+'&'
+    );
+    fullQueryString = fullQueryString.slice(0, -1); // Remove last &
+    return fullQueryString;
+  }
+
+  public searchMovies(queryString: string) {
+    this.http.get(queryString, {observe: 'response', responseType: 'json'}).subscribe(data => {console.log(data.body)});
   }
 }
 
