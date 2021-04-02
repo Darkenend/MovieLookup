@@ -13,8 +13,19 @@
     </ion-toolbar>
   </ion-header>
   <ion-searchbar placeholder="Search a movie..." inputmode="text" type="search" (ionChange)="onSearchChange($event)" [debounce]="250" showCancelButton="always"></ion-searchbar>
-  
-  <div id="container">
-    
-  </div>
+  <hr>
+  <ion-list *ngFor="let movie of movies">
+    <ion-item>
+      {{movie.title}} ({{movie.original_title}})
+    </ion-item>
+  </ion-list>
+  <hr>
+  <ion-button (click)="previousPage()" id="prevButton">
+    <ion-icon slot="start" name="chevron-back"></ion-icon>
+    Previous Page
+  </ion-button>
+  <ion-button (click)="nextPage()" id="nextButton">
+    <ion-icon slot="end" name="chevron-forward"></ion-icon>
+    Next Page
+  </ion-button>
 </ion-content>
