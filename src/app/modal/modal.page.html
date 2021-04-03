@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{movie.title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid fixed class="ion-padding">
+    <ion-row>
+      <ion-col>
+        <img src="{{obtainImage(movie.poster_path)}}" alt="Poster">
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-text-center">
+        {{movie.title}} <span class="original-title">({{movie.original_title}})</span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>
+            Sinopsis
+          </ion-label>
+        </ion-item>
+        <p class="ion-text-justify">
+          {{movie.overview}}
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label>
+            Fecha de salida: {{movie.release_date}}
+          </ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6" class="rating">
+        <ion-item>
+          <ion-label>
+            {{movie.vote_average}}/10
+          </ion-label>
+          <ion-badge color="primary">
+            {{movie.vote_count}} Votos
+          </ion-badge>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-button (click)="dismiss()">
+  <ion-icon slot="start" name="arrow-back"></ion-icon>
+  Go Back
+</ion-button>
+

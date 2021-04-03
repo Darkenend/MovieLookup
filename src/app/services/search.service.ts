@@ -9,7 +9,7 @@ export class SearchService {
 
   constructor() { }
 
-  public craftQuery(qString: string, qPage = 1, qLanguage = 'en-US', qInclude_adult = false, qRegion?: string, qYear?: number, qPrimary_release_year?: number) {
+  public craftQuery(qString: string, qPage = 1, qLanguage = 'es-ES', qInclude_adult = false, qRegion?: string, qYear?: number, qPrimary_release_year?: number) {
     let queryInfo: QueryString= {
       api_key: environment.api_key,
       language: qLanguage,
@@ -33,7 +33,7 @@ export class SearchService {
   }
 }
 
-// More info about these interfaces: https://developers.themoviedb.org/3/search/search-movies
+// More info about this interface: https://developers.themoviedb.org/3/search/search-movies
 /**
  * This serves the purpose of making a querystring crafting easier.
  * @param {string} api_key - API Key from TheMovieDB, for more information go [here](https://www.themoviedb.org/documentation/api).

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SearchService } from "../services/search.service";
-import { ToastController } from "@ionic/angular";
+import { ToastController, ModalController } from "@ionic/angular";
+import { ModalPage } from "../modal/modal.page";
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ export class HomePage {
   public current_page = 1;
   public total_pages = 1;
 
-  constructor(public searchService: SearchService, public toastController: ToastController, private http: HttpClient) {}
+  constructor(public searchService: SearchService, public toastController: ToastController, public modalController: ModalController, private http: HttpClient) {}
 
   private onSearchChange($event) {
     this.searchValue = $event.detail.value;
@@ -79,5 +80,16 @@ export class HomePage {
       duration: sentTime
     });
     toast.present();
+  }
+
+  async presentModal(movieObj) {
+    console.log(movieObj);
+    const modal = await this.modalController.create({
+      component: ModalPage,
+      componentProps: {
+        'movie': movieObj
+      }
+    });
+    return await modal.present();
   }
 }

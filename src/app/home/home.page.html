@@ -12,20 +12,32 @@
       <ion-title size="large">Search</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-searchbar placeholder="Search a movie..." inputmode="text" type="search" (ionChange)="onSearchChange($event)" [debounce]="250" showCancelButton="always"></ion-searchbar>
-  <hr>
-  <ion-list *ngFor="let movie of movies">
-    <ion-item>
-      {{movie.title}} ({{movie.original_title}})
-    </ion-item>
-  </ion-list>
-  <hr>
-  <ion-button (click)="previousPage()" id="prevButton">
-    <ion-icon slot="start" name="chevron-back"></ion-icon>
-    Previous Page
-  </ion-button>
-  <ion-button (click)="nextPage()" id="nextButton">
-    <ion-icon slot="end" name="chevron-forward"></ion-icon>
-    Next Page
-  </ion-button>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-searchbar placeholder="Search a movie..." inputmode="text" type="search" (ionChange)="onSearchChange($event)" [debounce]="250" showCancelButton="always"></ion-searchbar>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list *ngFor="let movie of movies">
+          <ion-item (click)="presentModal(movie)">
+            {{movie.title}} ({{movie.original_title}})
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-row>
+    <ion-col size="12" size-sm="6" size-lg="2" offset-lg="4" class="ion-text-center">
+      <ion-button (click)="previousPage()" id="prevButton">
+        <ion-icon slot="start" name="chevron-back"></ion-icon>
+        Previous Page
+      </ion-button>
+    </ion-col>
+    <ion-col size="12" size-sm="6" size-lg="2" class="ion-text-center">
+      <ion-button (click)="nextPage()" id="nextButton">
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+        Next Page
+      </ion-button>
+    </ion-col>
+  </ion-row>
 </ion-content>
