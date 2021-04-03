@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { SearchService } from "../services/search.service";
+import { MovieSearch, SearchService } from "../services/search.service";
 import { ToastController, ModalController } from "@ionic/angular";
 import { ModalPage } from "../modal/modal.page";
 
@@ -11,67 +10,59 @@ import { ModalPage } from "../modal/modal.page";
 })
 export class HomePage {
   public searchValue: string;
-  public movies;
-  public current_page = 1;
-  public total_pages = 1;
+  public searchResults: MovieSearch = {
+    page: 1,
+    total_pages: 1
+  };
 
-  constructor(public searchService: SearchService, public toastController: ToastController, public modalController: ModalController, private http: HttpClient) {}
+  constructor(public searchService: SearchService, public toastController: ToastController, public modalController: ModalController) {}
 
   private onSearchChange($event) {
     this.searchValue = $event.detail.value;
-    this.current_page = 1;
-    this.total_pages = 1;
-    this.mainSearch(this.searchValue, this.current_page);
+    this.searchResults.page = 1;
+    this.searchResults.total_pages = 1;
+    this.mainSearch(this.searchValue, this.searchResults.page);
   }
 
   private mainSearch(searchValue: string, page: number) {
-    let queryString = this.searchService.craftQuery(searchValue, page);
-    this.searchMovie(queryString);
+    let queryString = this.searchService.craftQueryMultiple(searchValue, page);
+    this.searchService.searchMovies(queryString);
+    setTimeout(() => this.updateResults(this.searchService.movieSearch), 2000);
   }
 
-  private searchMovie(queryString: string) {
-    this.http.get(queryString, {observe: 'response', responseType: 'json'}).subscribe(data => {
-      this.updateResults(data.body);
-      this.updateList();
-    });
-  }
+  
 
   private previousPage() {
-    if (this.current_page === 1) {
+    if (this.searchResults.page === 1) {
       this.notify('There\'s no page 0', 2000);
     } else {
-      this.current_page--;
-      this.mainSearch(this.searchValue, this.current_page);
+      this.searchResults.page--;
+      this.mainSearch(this.searchValue, this.searchResults.page);
     }
   }
 
   private nextPage() {
-    if (this.current_page === this.total_pages) {
+    if (this.searchResults.page === this.searchResults.total_pages) {
       this.notify('No more movies match', 2000);
     } else {
-      this.current_page++;
-      this.mainSearch(this.searchValue, this.current_page);
+      this.searchResults.page++;
+      this.mainSearch(this.searchValue, this.searchResults.page);
     }
   }
   
   private updateResults(data) {
     console.log("Updating Results...");
-    this.movies = data.results;
-    this.total_pages = data.total_pages;
-    this.printInfo();
+    this.searchResults.results = data.results;
+    this.searchResults.total_pages = data.total_pages;
     console.log("Updated Results.");
-  }
-
-  private updateList() {
-    console.log("Updating List...");
-    console.log("Updated List.");
+    this.printInfo();
   }
 
   private printInfo() {
     console.log(this.searchValue);
-    console.log(this.movies);
-    console.log(this.current_page);
-    console.log(this.total_pages);
+    console.log(this.searchResults.results);
+    console.log(this.searchResults.page);
+    console.log(this.searchResults.total_pages);
   }
 
   async notify(sentMessage: string, sentTime: number) {
@@ -82,8 +73,7 @@ export class HomePage {
     toast.present();
   }
 
-  async presentModal(movieObj) {
-    console.log(movieObj);
+  async presentModal(movieObj: MovieSearch) {
     const modal = await this.modalController.create({
       component: ModalPage,
       componentProps: {
